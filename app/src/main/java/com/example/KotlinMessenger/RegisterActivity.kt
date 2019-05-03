@@ -106,6 +106,7 @@ class RegisterActivity : AppCompatActivity() {
 
     }
 
+    //유저가 업로드한 프로필 사진을 스토리지에 업로드한다
     private fun uploadImageToFirebaseStorage(){
 
         if(selectedPhotoUri == null) return
@@ -129,6 +130,8 @@ class RegisterActivity : AppCompatActivity() {
             }
     }//uploadImageToFirebaseStorage
 
+
+    //가입한 유저 정보를 데이터베이스에 저장한다
     private fun saveUserToFirebaseDatabase(profileImageUrl: String) {
 
         val uid = FirebaseAuth.getInstance().uid ?:""
@@ -138,6 +141,10 @@ class RegisterActivity : AppCompatActivity() {
         ref.setValue(user)
             .addOnSuccessListener {
                 Timber.d("유저정보를 데이터베이스에 저장함: $it")
+
+                //회원가입에 성공하면 메시지 확인 화면으로 이동  --이동하면서 기존에 쌓인 액티비티 스택을 없애거나 새로운 태스크를 생성한다
+                startActivity(Intent(this, LatestMessagesActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)))
+
             }
 
             .addOnFailureListener {
