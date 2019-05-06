@@ -155,4 +155,8 @@ class RegisterActivity : AppCompatActivity() {
 }//RegisterActivity
 
 
-class User(val uid: String, val username: String, val profileImageUrl: String)
+class User(val uid: String, val username: String, val profileImageUrl: String) {
+
+    //유저 클래스 생성자
+    constructor() : this("", "", "")
+}

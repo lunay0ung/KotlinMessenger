@@ -24,7 +24,7 @@ class LatestMessagesActivity : AppCompatActivity() {
     private fun verifyUserInLoggedIn(){
         //유저가 로그인했는지 확인한다
         val uid = FirebaseAuth.getInstance().uid
-        if(uid == null) { //유저가 로그인하지 않은 상태
+        if(uid == null) { //유저가 로그인하지 않은 상태라면 회원가입 화면으로 이동한다
             startActivity(Intent(this, RegisterActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)))
         }
     }//verifyUserInLoggedIn
@@ -32,7 +32,7 @@ class LatestMessagesActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
             R.id.menu_new_message -> {
-
+                startActivity(Intent(this, NewMessageActivity::class.java))
             }
 
             R.id.menu_sign_out -> {
