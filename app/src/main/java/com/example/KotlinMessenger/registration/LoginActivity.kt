@@ -1,10 +1,11 @@
-package com.example.KotlinMessenger
+package com.example.KotlinMessenger.registration
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import com.example.KotlinMessenger.R
+import com.example.KotlinMessenger.messages.LatestMessagesActivity
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_login.*
 import timber.log.Timber
@@ -36,7 +37,7 @@ class LoginActivity : AppCompatActivity() {
                     //return@addOnCompleteListener
                 }
 
-                startActivity(Intent(this,LatestMessagesActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)))
+                startActivity(Intent(this, LatestMessagesActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)))
 
             }
             .addOnFailureListener {

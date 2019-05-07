@@ -1,13 +1,15 @@
-package com.example.KotlinMessenger
+package com.example.KotlinMessenger.registration
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.widget.Toast
+import com.example.KotlinMessenger.R
+import com.example.KotlinMessenger.messages.LatestMessagesActivity
+import com.example.KotlinMessenger.models.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
@@ -137,7 +139,11 @@ class RegisterActivity : AppCompatActivity() {
         val uid = FirebaseAuth.getInstance().uid ?:""
         val ref = FirebaseDatabase.getInstance().getReference("/users/$uid")
 
-        val user = User(uid, username_edittext_register.text.toString(), profileImageUrl)
+        val user = User(
+            uid,
+            username_edittext_register.text.toString(),
+            profileImageUrl
+        )
         ref.setValue(user)
             .addOnSuccessListener {
                 Timber.d("유저정보를 데이터베이스에 저장함: $it")
@@ -155,8 +161,3 @@ class RegisterActivity : AppCompatActivity() {
 }//RegisterActivity
 
 
-class User(val uid: String, val username: String, val profileImageUrl: String) {
-
-    //유저 클래스 생성자
-    constructor() : this("", "", "")
-}

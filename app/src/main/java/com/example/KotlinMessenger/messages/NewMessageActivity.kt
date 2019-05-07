@@ -1,9 +1,10 @@
-package com.example.KotlinMessenger
+package com.example.KotlinMessenger.messages
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import com.example.KotlinMessenger.R
+import com.example.KotlinMessenger.models.User
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -24,15 +25,12 @@ class NewMessageActivity : AppCompatActivity() {
         Timber.plant(Timber.DebugTree())
 
         supportActionBar?.title = "Select User"
-
-        //groupie라는 라이브러리를 통해 리사이클러뷰 어댑터 생성을 생략할 수 있다
-   //     val adapter = GroupAdapter<ViewHolder>()
-
-
-   //     recyclerview_newmessage.adapter = adapter
-
         fetchUsers()
     }//onCreate
+
+    companion object {
+        val USER_KEY = "USER_KEY"
+    }
 
 
     private fun fetchUsers(){
@@ -44,6 +42,7 @@ class NewMessageActivity : AppCompatActivity() {
                 //p0 is a datasnapshot that contains all of the data
 
 
+                //groupie라는 라이브러리를 통해 리사이클러뷰 어댑터 생성을 생략할 수 있다
                 val adapter = GroupAdapter<ViewHolder>()
 
                 p0.children.forEach {
@@ -52,6 +51,14 @@ class NewMessageActivity : AppCompatActivity() {
                     if(user != null) {
                         adapter.add(UserItem(user))
                     }
+
+                    adapter.setOnItemClickListener{item, view ->
+
+                        val userItem = item as UserItem
+                        startActivity(Intent(applicationContext, ChatLogActivity::class.java).putExtra(USER_KEY, item.user))
+                        finish()
+
+                    }//clickListner
                     recyclerview_newmessage.adapter = adapter
                 }//forEach
 
@@ -70,7 +77,7 @@ class NewMessageActivity : AppCompatActivity() {
 
 
 
-class UserItem(val user:User) : Item<ViewHolder>() {
+class UserItem(val user: User) : Item<ViewHolder>() {
 
     override fun bind(viewHolder: ViewHolder, position: Int) {
         //will be called in out list for each user object later on
