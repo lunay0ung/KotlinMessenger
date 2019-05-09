@@ -17,7 +17,7 @@
             android:background="@android:color/white"
             android:hint="Enter Message"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toStartOf="@+id/button_chat_log"
+            app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toStartOf="@+id/send_button_chat_log"
             android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginRight="8dp"
@@ -28,7 +28,7 @@
             android:text="Send"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
-            android:id="@+id/button_chat_log"
+            android:id="@+id/send_button_chat_log"
             android:background="@drawable/rounded_button"
             android:textColor="@android:color/white"
             android:textStyle="bold"
@@ -42,7 +42,7 @@
             android:layout_height="0dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             android:background="@android:color/holo_green_light"
-            app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toTopOf="@+id/button_chat_log"
+            app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toTopOf="@+id/send_button_chat_log"
             app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginBottom="8dp" android:id="@+id/recyclerview_chat_log"/>
 

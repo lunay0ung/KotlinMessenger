@@ -20,7 +20,7 @@
 
     <TextView
             android:text="This is my message"
-            android:id="@+id/textview_chat_from_row"
+            android:id="@+id/textview_chat_to_row"
             android:padding="16dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
