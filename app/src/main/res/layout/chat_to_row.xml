@@ -8,8 +8,8 @@
                                                    android:layout_height="wrap_content">
 
 
-    <ImageView
-            android:id="@+id/imageview_chat_from_row"
+    <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/imageview_chat_to_row"
             android:layout_width="50dp"
             android:layout_height="50dp"
             app:srcCompat="@android:drawable/star_big_on"
@@ -26,8 +26,8 @@
             android:layout_height="wrap_content"
             android:maxWidth="240dp"
             android:background="@drawable/rounded_edittext_register_login"
-            app:layout_constraintEnd_toStartOf="@+id/imageview_chat_from_row"
+            app:layout_constraintEnd_toStartOf="@+id/imageview_chat_to_row"
             android:layout_marginRight="8dp" android:layout_marginEnd="8dp"
-            app:layout_constraintTop_toTopOf="@+id/imageview_chat_from_row"/>
+            app:layout_constraintTop_toTopOf="@+id/imageview_chat_to_row"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

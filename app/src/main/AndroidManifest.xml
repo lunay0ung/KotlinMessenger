@@ -29,13 +29,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".registration.LoginActivity"/>
-        <activity android:name=".registration.RegisterActivity">
-            <!--<intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+        <activity android:name=".registration.RegisterActivity"/>
 
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>-->
-        </activity>
     </application>
 
 </manifest>

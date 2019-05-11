@@ -3,7 +3,6 @@ package com.example.KotlinMessenger.messages
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
 import android.widget.Toast
 import com.example.KotlinMessenger.R
 import com.example.KotlinMessenger.models.ChatMessage
@@ -13,11 +12,11 @@ import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.squareup.picasso.Picasso
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.Item
 import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.activity_chat_log.*
-import kotlinx.android.synthetic.main.activity_register.*
 import kotlinx.android.synthetic.main.chat_from_row.view.*
 import kotlinx.android.synthetic.main.chat_to_row.view.*
 import timber.log.Timber
@@ -31,7 +30,7 @@ class ChatLogActivity : AppCompatActivity(){
 */
 
     val adapter = GroupAdapter<ViewHolder>()
-
+    var toUser: User? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,11 +41,12 @@ class ChatLogActivity : AppCompatActivity(){
 
         recyclerview_chat_log.adapter = adapter
 
-        val user = intent.getParcelableExtra<User>(NewMessageActivity.USER_KEY) //NewMessageActivity에서 유저정보를 통째로 받아옴
+
+        //val user = intent.getParcelableExtra<User>(NewMessageActivity.USER_KEY) //NewMessageActivity에서 유저정보를 통째로 받아옴
         //val username = intent.getStringExtra(NewMessageActivity.USER_KEY)
+        toUser = intent.getParcelableExtra<User>(NewMessageActivity.USER_KEY) //NewMessageActivity에서 유저정보를 통째로 받아옴
 
-
-        supportActionBar?.title = user.username //액션바에 유저네임을 띄운다
+        supportActionBar?.title = toUser?.username //액션바에 유저네임을 띄운다
 
         //setupDummyData()
 
@@ -66,15 +66,16 @@ class ChatLogActivity : AppCompatActivity(){
         reference.addChildEventListener(object: ChildEventListener{
             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
 
-                val chatMessage =  p0.getValue(ChatMessage:: class.java) //모든 메시지를 클래스객체로 저장했기 때문에 불러오는 것도 쉽다
+                val chatMessage =  p0.getValue(ChatMessage:: class.java) //모든 메시지를 클래스객체로 저장했기 때문에 불러오는 것도 간단하다
 
                 if(chatMessage != null) {
 
                     if(chatMessage.fromId == FirebaseAuth.getInstance().uid) {
-                        adapter.add(ChatFromItem(chatMessage.text))
+                        val currentUser = LatestMessagesActivity.currentUser ?:return
+                        adapter.add(ChatFromItem(chatMessage.text, currentUser))
                     }
                     else {
-                        adapter.add(ChatToItem(chatMessage.text))
+                        adapter.add(ChatToItem(chatMessage.text,toUser!!))
                     }
                     Timber.d(chatMessage.text)
                 }
@@ -121,13 +122,13 @@ class ChatLogActivity : AppCompatActivity(){
     }//performSendMessage
 
     //더미 채팅데이터 삽입
-    private fun setupDummyData(){
+/*    private fun setupDummyData(){
         val adapter = GroupAdapter<ViewHolder>()
         adapter.add(ChatFromItem("From"))
         adapter.add(ChatToItem("to"))
 
         recyclerview_chat_log.adapter = adapter
-    }//setupDummyData
+    }//setupDummyData*/
 
     //toast
     fun Context.toast(resourceId: Int) = toast(getString(resourceId))
@@ -136,10 +137,17 @@ class ChatLogActivity : AppCompatActivity(){
 
 }//ChatLogActivity
 
-class ChatFromItem(val text:String) : Item<ViewHolder>() {
+class ChatFromItem(val text:String, val user: User) : Item<ViewHolder>() {
 
     override fun bind(viewHolder: ViewHolder, position: Int) {
             viewHolder.itemView.textview_chat_from_row.text = text
+
+        //load our user image into the star
+        val uri = user.profileImageUrl
+        Timber.d("currentUser's profileImageUrl $uri")
+        val targetImageView = viewHolder.itemView.imageview_chat_from_row
+        Picasso.get().load(uri).into(targetImageView)
+
         }//bind
 
     override fun getLayout(): Int {
@@ -149,10 +157,15 @@ class ChatFromItem(val text:String) : Item<ViewHolder>() {
        }//getLayout
 }//ChatFromItem
 
-class ChatToItem(val text:String) : Item<ViewHolder>() {
+class ChatToItem(val text:String, val user:User) : Item<ViewHolder>() {
 
     override fun bind(viewHolder: ViewHolder, position: Int) {
         viewHolder.itemView.textview_chat_to_row.text = text
+
+        //load our user image into the star
+        val uri = user.profileImageUrl
+        val targetImageView = viewHolder.itemView.imageview_chat_to_row
+        Picasso.get().load(uri).into(targetImageView)
 
     }//bind
 

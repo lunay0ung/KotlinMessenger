@@ -6,22 +6,54 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import com.example.KotlinMessenger.R
+import com.example.KotlinMessenger.models.User
 import com.example.KotlinMessenger.registration.RegisterActivity
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+import timber.log.Timber
 
 
 //최신 메시지를 확인하는 액티비티
 class LatestMessagesActivity : AppCompatActivity() {
 
+    companion object {
+        var currentUser : User? = null
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_latest_messages)
+
+        Timber.plant(Timber.DebugTree())
+
+        fetchCurrentUser()
 
         verifyUserInLoggedIn()
 
 
     }//onCreate
 
+    private fun fetchCurrentUser(){
+
+        val uid = FirebaseAuth.getInstance().uid
+        val ref = FirebaseDatabase.getInstance().getReference("/users/$uid")
+        ref.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {
+
+            }
+
+            override fun onDataChange(p0: DataSnapshot) {
+
+                currentUser = p0.getValue(User::class.java)
+                Timber.d("current user: ${currentUser?.username}")
+
+            }
+        })
+
+    }//fetchCurrentUser
 
     private fun verifyUserInLoggedIn(){
         //유저가 로그인했는지 확인한다
