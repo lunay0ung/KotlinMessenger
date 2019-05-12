@@ -132,6 +132,15 @@ class ChatLogActivity : AppCompatActivity(){
 
         toReference.setValue(chatMessage)
 
+
+        //help keep track of latest messages between current logged in user and the counter part
+        val latestMessageReference = FirebaseDatabase.getInstance().getReference("/latest-messages/$fromId/$toId")
+        latestMessageReference.setValue(chatMessage)
+
+        val latestMessageToReference = FirebaseDatabase.getInstance().getReference("/latest-messages/$toId/$fromId")
+        latestMessageToReference.setValue(chatMessage)
+
+
     }//performSendMessage
 
     //더미 채팅데이터 삽입

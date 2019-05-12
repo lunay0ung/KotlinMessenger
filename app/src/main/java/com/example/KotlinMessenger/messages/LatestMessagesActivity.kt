@@ -6,13 +6,16 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import com.example.KotlinMessenger.R
+import com.example.KotlinMessenger.models.ChatMessage
 import com.example.KotlinMessenger.models.User
 import com.example.KotlinMessenger.registration.RegisterActivity
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.*
+import com.xwray.groupie.GroupAdapter
+import com.xwray.groupie.Item
+import com.xwray.groupie.ViewHolder
+import kotlinx.android.synthetic.main.activity_latest_messages.*
+import kotlinx.android.synthetic.main.latest_message_row.view.*
 import timber.log.Timber
 
 
@@ -29,12 +32,107 @@ class LatestMessagesActivity : AppCompatActivity() {
 
         Timber.plant(Timber.DebugTree())
 
+
+        //setupDummyRows()
+        recyclerview_latest_messages.adapter = adapter
+
+        listenForLatestMessages()
+
         fetchCurrentUser()
 
         verifyUserInLoggedIn()
 
 
     }//onCreate
+
+
+    class LatestMessageRow(val chatMessage: ChatMessage): Item<ViewHolder>(){
+
+        override fun bind(viewHolder: ViewHolder, position: Int) {
+            //viewHolder.itemView.username_textview_latest_message
+
+            viewHolder.itemView.message_textview_latest_message.text = chatMessage.text
+
+        }
+
+        override fun getLayout(): Int {
+           return R.layout.latest_message_row
+        }
+    }
+
+    val latestMeessagesMap = HashMap<String, ChatMessage>()
+
+    private fun refreshRecyclerViewMessages(){
+        adapter.clear()
+        latestMeessagesMap.values.forEach {
+            adapter.add(LatestMessageRow(it))
+        }
+    }//refreshRecyclerViewMessages
+
+    private fun listenForLatestMessages(){
+
+        val fromId = FirebaseAuth.getInstance().uid
+        val ref = FirebaseDatabase.getInstance().getReference("/latest-messages/$fromId")
+        ref.addChildEventListener(object: ChildEventListener{
+            override fun onCancelled(p0: DatabaseError) {
+            }
+
+            override fun onChildMoved(p0: DataSnapshot, p1: String?) {
+            }
+
+            //if a new user messages to us it will be notified via onChildAdded
+            override fun onChildAdded(p0: DataSnapshot, p1: String?) {
+
+                //we convert the snapshot that we are seeing into a chat message
+                val chatMessage = p0.getValue(ChatMessage::class.java) ?: return
+
+                //then put the actual message into our hashmap
+                latestMeessagesMap[p0.key!!] = chatMessage
+                //the key is belong to the user that we are messaging
+
+                //and reload everything inside of recyclerview
+                //by first clearing out all messages and just adding it back in by using all of the values inside of the hashmap
+                refreshRecyclerViewMessages()
+
+
+                //convert the snapshot that we are seeing into an actual message
+                // val chatMessage = p0.getValue(ChatMessage::class.java)?:return
+                // adapter.add(LatestMessageRow(chatMessage))
+
+            }
+
+            //if a user messages us again we are notified onChildChanged function and follow the same logic as above
+            override fun onChildChanged(p0: DataSnapshot, p1: String?) {
+                //called every time node(in databse) gets modified
+                val chatMessage = p0.getValue(ChatMessage::class.java) ?: return
+
+                latestMeessagesMap[p0.key!!] = chatMessage
+                refreshRecyclerViewMessages()
+
+              //  adapter.add(LatestMessageRow(chatMessage))
+            }
+
+
+
+            override fun onChildRemoved(p0: DataSnapshot) {
+            }
+        })//addChildEventListener
+
+    }//listenForLatestMessages
+
+    val adapter = GroupAdapter<ViewHolder>()
+
+
+/*    private fun setupDummyRows(){
+
+        val adapter = GroupAdapter<ViewHolder>()
+
+        adapter.add(LatestMessageRow())
+        adapter.add(LatestMessageRow())
+
+        recyclerview_latest_messages.adapter = adapter
+
+    }//setupDummyRows*/
 
     private fun fetchCurrentUser(){
 
