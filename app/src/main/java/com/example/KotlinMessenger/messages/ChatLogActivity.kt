@@ -60,7 +60,12 @@ class ChatLogActivity : AppCompatActivity(){
     }//onCreate
 
     private fun listenForMessages(){
-        val reference = FirebaseDatabase.getInstance().getReference("/messages")
+       // val reference = FirebaseDatabase.getInstance().getReference("/messages")
+
+        val fromId = FirebaseAuth.getInstance().uid
+        val toId = toUser?.uid
+        val reference = FirebaseDatabase.getInstance().getReference("/user-messages/$fromId/$toId")
+
 
         //notify us every piece of data that belongs to 'messages' database
         reference.addChildEventListener(object: ChildEventListener{
@@ -107,17 +112,25 @@ class ChatLogActivity : AppCompatActivity(){
 
         if(fromId == null) return
 
-        val reference = FirebaseDatabase.getInstance().getReference("/messages").push() //파이어베이스를 통해 메시지를 보냄
+      //  val reference = FirebaseDatabase.getInstance().getReference("/messages").push() //파이어베이스를 통해 메시지를 보냄
+        //메시지 저장 노드를 세분화
+        val reference = FirebaseDatabase.getInstance().getReference("/user-messages/$fromId/$toId").push() //파이어베이스를 통해 메시지를 보냄
+        val toReference = FirebaseDatabase.getInstance().getReference("/user-messages/$toId/$fromId").push()
+
+
         val chatMessage = ChatMessage(reference.key!!, text, fromId, toId, System.currentTimeMillis() / 1000)
         reference.setValue(chatMessage)
             .addOnSuccessListener {
                 Timber.d("saved our message: ${reference.key}")
-                edittext_chat_log.setText("")
+                edittext_chat_log.text.clear()
+                recyclerview_chat_log.scrollToPosition(adapter.itemCount-1)
             }
             .addOnFailureListener {
                 Timber.d("failed saved our message: ${reference.key}")
                 toast("Failed to send your message")
             }
+
+        toReference.setValue(chatMessage)
 
     }//performSendMessage
 
