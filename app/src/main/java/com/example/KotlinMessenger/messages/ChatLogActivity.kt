@@ -85,6 +85,9 @@ class ChatLogActivity : AppCompatActivity(){
                     Timber.d(chatMessage.text)
                 }
 
+                //show recent messages
+                recyclerview_chat_log.scrollToPosition(adapter.itemCount - 1)
+
             }//onChildAdded
 
             override fun onCancelled(p0: DatabaseError) {

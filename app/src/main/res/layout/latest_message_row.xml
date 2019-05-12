@@ -5,27 +5,28 @@
                                                    android:orientation="vertical"
                                                    android:layout_width="match_parent"
                                                    android:layout_height="120dp">
-    <ImageView
-            android:layout_width="64dp"
-            android:layout_height="64dp" tools:srcCompat="@android:drawable/btn_star_big_on"
-            android:id="@+id/imageView2"
+    <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="72dp"
+            android:layout_height="72dp" tools:srcCompat="@android:drawable/btn_star_big_on"
+            android:id="@+id/imageview_latest_message"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginLeft="24dp" android:layout_marginStart="24dp" app:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="8dp" android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toBottomOf="parent"/>
     <TextView
-            android:text="Username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/username_textview_latest_message" app:layout_constraintStart_toEndOf="@+id/imageView2"
+            android:textSize="16dp"
+            tools:text="Username"
+            android:id="@+id/username_textview_latest_message" app:layout_constraintStart_toEndOf="@+id/imageview_latest_message"
             android:layout_marginLeft="16dp" android:layout_marginStart="16dp" app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@+id/message_textview_latest_message" android:textStyle="bold"
             android:textColor="@android:color/black"/>
     <TextView
-            android:text="Latest Message"
+            tools:text="Latest Message"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:id="@+id/message_textview_latest_message" app:layout_constraintStart_toEndOf="@+id/imageView2"
+            android:id="@+id/message_textview_latest_message" app:layout_constraintStart_toEndOf="@+id/imageview_latest_message"
             android:layout_marginLeft="16dp" android:layout_marginStart="16dp" app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="8dp" android:layout_marginRight="8dp"
             app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintTop_toBottomOf="@+id/username_textview_latest_message"
