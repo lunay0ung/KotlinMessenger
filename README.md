@@ -15,6 +15,6 @@ Screenshots
 
 To-do list
 -------------
-[ ] add comments line by line after code review  
-[ ] notify users with FCM(Firebase Cloud Messaging)  
-[ ] custom UI   
+-[ ] add comments line by line after code review  
+-[ ] notify users with FCM(Firebase Cloud Messaging)  
+-[ ] custom UI   
