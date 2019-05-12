@@ -25,7 +25,6 @@ class LatestMessagesActivity : AppCompatActivity() {
     companion object {
         var currentUser : User? = null
     }
-
     
 
     override fun onCreate(savedInstanceState: Bundle?) {
